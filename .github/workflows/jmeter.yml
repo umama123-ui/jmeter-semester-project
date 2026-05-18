@@ -30,10 +30,17 @@ jobs:
 
       - name: Run Performance Tests
         run: |
-          jmeter/bin/jmeter -n \
+          chmod +x jmeter/bin/jmeter.sh
+          ./jmeter/bin/jmeter.sh -n \
             -t tests/load_test.jmx \
             -l results/results.jtl \
             -e -o reports/
+
+      - name: Verify Reports Generated
+        run: |
+          echo "Checking if reports folder exists and has content..."
+          ls -la reports/ || echo "ERROR: reports folder not found"
+          find reports -type f | head -20 || echo "ERROR: No files in reports folder"
 
       - name: Upload HTML Report as Artifact
         uses: actions/upload-artifact@v4
